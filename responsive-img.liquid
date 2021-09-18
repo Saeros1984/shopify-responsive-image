@@ -1,0 +1,83 @@
+{% comment %}
+
+Developed by Dmitrij Mogil https://github.com/Saeros1984
+Example usage: 
+{% render "responsive-img" with img: "tatoo-drawing.jpg", width:300, breakpoints: "700.300x 500.200x200.center 375.150x150.top", alt:"img", lazy: false %}
+
+{% endcomment %}
+
+{% liquid
+  assign error=false
+  if width == nil
+    assign error="Must set default 'width' param when call the snippet!"
+  endif
+  assign breakpoints=breakpoints | split: " "
+  assign width_array=width | split: "x"
+  if width_array.size == 1
+    assign width=width | append: "x"
+  endif
+%}
+{% if error != false %}
+{{ error }}
+{% else %}
+{% liquid
+  if img.src
+    assign is_asset=false
+    if alt == nil
+      assign alt = img.alt
+    endif
+  else 
+    assign is_asset=true
+  endif
+  capture result
+  if selector
+    
+  else
+    echo '<picture>'
+  endif
+  if is_asset
+    assign image=img | asset_img_url: width
+  else
+    assign image=img | img_url: width
+  endif
+  if selector
+    echo selector | append: '{background-image:url(' | append: image | append: ');}'
+    assign breakpoints = breakpoints | reverse
+  endif
+  for point in breakpoints
+    assign sizes_array=point | split:"."
+    if is_asset
+      assign image_1x=img | asset_img_url: sizes_array[1], scale: 1, crop: sizes_array[2]
+      assign image_2x=img | asset_img_url: sizes_array[1], scale: 2, crop: sizes_array[2]
+      assign image_3x=img | asset_img_url: sizes_array[1], scale: 3, crop: sizes_array[2]
+    else
+      assign image_1x=img | img_url: sizes_array[1], scale: 1, crop: sizes_array[2]
+      assign image_2x=img | img_url: sizes_array[1], scale: 2, crop: sizes_array[2]
+      assign image_3x=img | img_url: sizes_array[1], scale: 3, crop: sizes_array[2]
+    endif
+    if selector
+      echo '@media (max-width: '| append: sizes_array[0] | append: 'px){' | append: selector | append: ' {background-image:url(' | append: image_1x | append: ');}}'
+      echo '@media (max-width: '| append: sizes_array[0] | append: 'px) and (-webkit-min-device-pixel-ratio: 2) and (min-resolution: 192dpi){' | append: selector | append: ' {background-image:url(' | append: image_2x | append: ');}}'
+      echo '@media (max-width: '| append: sizes_array[0] | append: 'px) and (-webkit-min-device-pixel-ratio: 3) and (min-resolution: 250dpi){' | append: selector | append: ' {background-image:url(' | append: image_3x | append: ');}}'
+    else
+      if lazy
+        echo '<source media="(max-width: ' | append: sizes_array[0] | append: 'px)" data-srcset="' | append: image_1x | append: ' 1x, ' | append: image_2x | append: ' 2x, ' | append: image_1x | append: ' 3x">'
+      else
+        echo '<source media="(max-width: ' | append: sizes_array[0] | append: 'px)" srcset="' | append: image_1x | append: ' 1x, ' | append: image_2x | append: ' 2x, ' | append: image_1x | append: ' 3x">'
+      endif
+    endif
+  endfor
+  if selector
+  
+  else
+    if lazy
+      echo '<img class="lazyload" data-src="' | append: image | append: '" alt="' | append: alt | append: '">'
+    else
+      echo '<img src="' | append: image | append: '" alt="' | append: alt | append: '">'
+    endif
+    echo '</picture>'
+  endif
+  endcapture
+  echo result
+%}
+{% endif %}
