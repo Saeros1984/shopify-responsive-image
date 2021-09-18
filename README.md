@@ -1,4 +1,4 @@
-# Shopify snipper for automatically render responsive images
+# Shopify snippet for automatically render responsive images
 
 The snippet accepts Image object or asset name and renders responsive image for given list of breakpoints, and for retina 2x and 3x.
 Use the biggest image you have, snippet will resize it for specified breakpoints.
