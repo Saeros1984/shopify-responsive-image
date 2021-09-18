@@ -11,8 +11,11 @@ Params:
 
 **breakpoints** - string with array of breakpoints "breakpointx.image_size.crop", divided by whitespaces.
 Example: "750.600x500.center 400.350x300"
+
 First parametr is a breakpoint, represents "max-width" query.
+
 Second - image size on that breakpoint. You can specify height after x charachter or not.
+
 Third parameter, crop, when specified, will crop image to needed ratio with specified way. 
 More about crop - https://shopify.dev/api/liquid/filters/media-filters#img_url
 
