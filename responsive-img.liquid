@@ -61,9 +61,9 @@ Example usage:
       echo '@media (max-width: '| append: sizes_array[0] | append: 'px) and (-webkit-min-device-pixel-ratio: 3) and (min-resolution: 250dpi){' | append: selector | append: ' {background-image:url(' | append: image_3x | append: ');}}'
     else
       if lazy
-        echo '<source media="(max-width: ' | append: sizes_array[0] | append: 'px)" data-srcset="' | append: image_1x | append: ' 1x, ' | append: image_2x | append: ' 2x, ' | append: image_1x | append: ' 3x">'
+        echo '<source media="(max-width: ' | append: sizes_array[0] | append: 'px)" data-srcset="' | append: image_1x | append: ' 1x, ' | append: image_2x | append: ' 2x, ' | append: image_3x | append: ' 3x">'
       else
-        echo '<source media="(max-width: ' | append: sizes_array[0] | append: 'px)" srcset="' | append: image_1x | append: ' 1x, ' | append: image_2x | append: ' 2x, ' | append: image_1x | append: ' 3x">'
+        echo '<source media="(max-width: ' | append: sizes_array[0] | append: 'px)" srcset="' | append: image_1x | append: ' 1x, ' | append: image_2x | append: ' 2x, ' | append: image_3x | append: ' 3x">'
       endif
     endif
   endfor
